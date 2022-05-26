@@ -54,13 +54,25 @@ func PostBook(c *gin.Context) {
 	}
 
 	row, err := database.Db.Exec(
-		"INSERT INTO book (title, author, quantity) VALUES (?, ?, ?)", newBook.Title, newBook.Author)
+		"INSERT INTO book (title, author) VALUES (?, ?)", newBook.Title, newBook.Author)
 	if err != nil {
 		_ = fmt.Errorf("addBook: %v", err)
 	}
 
 	lastBookId, _ := row.LastInsertId()
 	lastBook, _ := getBook(lastBookId)
+
+	sciences := newBook.Sciences
+	fmt.Println(sciences)
+	for _, science := range sciences {
+		fmt.Println(science)
+		row, err := database.Db.Exec(
+			"INSERT INTO book_sciences (book_id, science_id) VALUES (?, ?)", lastBook.ID, science)
+		if err != nil {
+			_ = fmt.Errorf("addBookScience: %v", err)
+		}
+		fmt.Println(row)
+	}
 	c.IndentedJSON(http.StatusCreated, lastBook)
 }
 

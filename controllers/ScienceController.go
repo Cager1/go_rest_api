@@ -60,7 +60,7 @@ func PostSciences(c *gin.Context) {
 	}
 
 	lastScienceID, _ := row.LastInsertId()
-	lastScience, _ := getBook(lastScienceID)
+	lastScience, _ := getScience(lastScienceID)
 	c.IndentedJSON(http.StatusCreated, lastScience)
 }
 
